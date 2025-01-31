@@ -1,7 +1,6 @@
 import os
 import django
 import argparse
-import random
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 
@@ -28,7 +27,11 @@ def add_comment(name_student, subject, commentary):
     )
 
     if not last_mark:
-        print('По данному предмету нет оценок со значением 5.')
+        print(
+            f"""По данному предмету '{subject}' нет оценок со значением 5.
+            Либо предмет '{subject}' записан не верно
+            Возможно предмет '{subject}' отсутствует в расписании"""
+        )
         return
 
     last_mark = last_mark.order_by('-created').first()
@@ -63,7 +66,5 @@ if __name__ == '__main__':
         add_comment(student, subject, commentary)
     except ObjectDoesNotExist:
         print(f'Ученика с именем {name_student} в базе данных нет, либо вы ввели имя не полностью.')
-    except AttributeError:
-        print(f'Предмета {subject} не существует либо он записан не верно.')
     except MultipleObjectsReturned:
         print('Выбрано более одного ученика! Введите имя полностью.')
